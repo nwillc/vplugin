@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2014, nwillc@gmail.com
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+apply plugin: 'groovy'
+apply plugin: 'nexus'
+apply plugin: 'release'
+apply plugin: 'maven'
+
+group = 'com.github.nwillc'
+version = '1.0'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url 'http://maven.tmatesoft.com/content/repositories/releases/'
+        }
+    }
+
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1',
+                'org.tmatesoft.sqljet:sqljet:1.1.9',
+                'au.com.ish.gradle:release:2.2.2'
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.+',
+                'org.assertj:assertj-core:1.+'
+}
+//
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: uri('../repo'))
+//        }
+//    }
+//}
+
+
+release {
+    failOnSnapshotDependencies = true
+    allowLocalModifications = true
+    releaseDryRun = false
+    scm = 'git'
+}
+
+nexus {
+    attachSources = true
+    attachTests = false
+    attachJavadoc = true
+    sign = true
+}
+
+modifyPom {
+    project {
+        name 'Versions Gradle Plugin'
+        description 'Gradle plugin to report newer versions of dependencies'
+        url 'https://github.com/nwillc/vplugin'
+        inceptionYear '2014'
+
+        scm {
+            url 'https://github.com/nwillc/vplugin'
+            connection 'scm:https://nwillc@github.com:nwillc/vplugin.git'
+            developerConnection 'scm:git:git@github.com:nwillc/vplugin.git'
+        }
+
+        licenses {
+            license {
+                name 'ISC'
+                url 'http://www.isc.org/downloads/software-support-policy/isc-license/'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'nwillc'
+                name 'N Christopher'
+                email 'nwillc@gmail.com'
+            }
+        }
+    }
+}
