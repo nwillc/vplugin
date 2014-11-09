@@ -14,5 +14,5 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-rootProject.name = 'versionsPlugin'
+rootProject.name = 'vplugin'
 
