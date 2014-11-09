@@ -1,4 +1,5 @@
 vplugin
 =======
 
-Gradle plugin to report newer versions of dependencies
+Gradle plugin to report newer versions of dependencies.
+

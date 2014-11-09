@@ -43,7 +43,9 @@ class VersionsPlugin implements Plugin<Project> {
                             versions.removeAll { it.toLowerCase().contains('beta') }
                             versions.removeAll { it.toLowerCase().contains('rc') }
                             def newest = versions.last()
-                            if (!match(version,newest.toString())) {
+                            if (match(version,newest.toString())){
+                               println "$group:$name $newest"
+                            } else {
                                 println "$group:$name $version -> $newest"
                             }
                         } catch (FileNotFoundException e) {
