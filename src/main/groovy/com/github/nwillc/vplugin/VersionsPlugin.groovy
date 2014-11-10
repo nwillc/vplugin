@@ -28,6 +28,8 @@ class VersionsPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.task('versions') << {
             def checked = [:]
+            println sprintf('\n%-40s%20s%20s', 'Dependency', 'Using', 'Update')
+            println sprintf('%-40s%20s%20s', '----------', '-----', '------')
             project.configurations.each { Configuration configuration ->
                 configuration.allDependencies.each { Dependency dependency ->
                     def version = dependency.version
@@ -44,9 +46,9 @@ class VersionsPlugin implements Plugin<Project> {
                             versions.removeAll { it.toLowerCase().contains('rc') }
                             def newest = versions.last()
                             if (match(version,newest.toString())){
-                               println "$group:$name $newest"
+                               println sprintf('%-40s%20s',"$group:$name", newest)
                             } else {
-                                println "$group:$name $version -> $newest"
+                                println sprintf('%-40s%20s ->%17s',"$group:$name",version, newest)
                             }
                         } catch (FileNotFoundException e) {
                             project.logger.debug "Unable to download $url: $e.message"
