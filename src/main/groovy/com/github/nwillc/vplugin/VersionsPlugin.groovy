@@ -16,53 +16,87 @@
 
 package com.github.nwillc.vplugin
 
+import com.google.common.annotations.VisibleForTesting
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.repositories.ArtifactRepository
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class VersionsPlugin implements Plugin<Project> {
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone()
+    }
+
+    @Override
+    int hashCode() {
+        return super.hashCode()
+    }
+
     void apply(Project project) {
         project.task('versions') << {
+            def urls = repoUrls(project.getRepositories())
             def checked = [:]
-            println sprintf('\n%-40s%20s%20s', 'Dependency', 'Using', 'Update')
+            println sprintf('%-40s%20s%20s', 'Dependency', 'Using', 'Update')
             println sprintf('%-40s%20s%20s', '----------', '-----', '------')
             project.configurations.each { Configuration configuration ->
                 configuration.allDependencies.each { Dependency dependency ->
-                    def version = dependency.version
-                    if (!version.contains('SNAPSHOT') && !checked[dependency]) {
-                        def group = dependency.group
-                        def path = group.replace('.', '/')
-                        def name = dependency.name
-                        def url = "http://repo1.maven.org/maven2/$path/$name/maven-metadata.xml"
-                        try {
-                            def metadata = new XmlSlurper().parseText(url.toURL().text)
-                            def versions = metadata.versioning.versions.version.collect { it.text() }
-                            versions.removeAll { it.toLowerCase().contains('alpha') }
-                            versions.removeAll { it.toLowerCase().contains('beta') }
-                            versions.removeAll { it.toLowerCase().contains('rc') }
-                            def newest = versions.last()
-                            if (match(version,newest.toString())){
-                               println sprintf('%-40s%20s',"$group:$name", newest)
-                            } else {
-                                println sprintf('%-40s%20s ->%17s',"$group:$name",version, newest)
+                    if (!dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
+                        for (String url : urls) {
+                            def newest = latest(url, dependency.group, dependency.name)
+                            if (newest != null) {
+                                if (match(dependency.version, newest.toString())){
+                                    println sprintf('%-40s%20s',"$dependency.group:$dependency.name", newest)
+                                } else {
+                                    println sprintf('%-40s%20s ->%17s',"$dependency.group:$dependency.name",dependency.version, newest)
+                                }
+                                break
                             }
-                        } catch (FileNotFoundException e) {
-                            project.logger.debug "Unable to download $url: $e.message"
-                        } catch (org.xml.sax.SAXParseException e) {
-                            project.logger.debug "Unable to parse $url: $e.message"
                         }
+
                         checked[dependency] = true
                     }
                 }
             }
-
         }
     }
 
+    private static String[] repoUrls(Collection<ArtifactRepository> repos) {
+        def urls = []
+        println 'Searching repositories:'
+        for (ArtifactRepository repo : repos) {
+            if (repo.hasProperty('url') && repo.url) {
+                def url = repo.url.toString()
+                if (url.startsWith('http')) {
+                    println '\t' + repo.name + ' at ' + url
+                    urls.add(url)
+                }
+            }
+        }
+        println ''
+        return urls
+    }
+
+    private static String latest(String url, String group, String name) {
+        def path = group.replace('.','/')
+        def fullUrl = "$url/$path/$name/maven-metadata.xml"
+        try {
+            def metadata = new XmlSlurper().parseText(fullUrl.toURL().text)
+            return metadata.versioning.latest
+        } catch (FileNotFoundException e) {
+            println "Unable to download $url: $e.message"
+        } catch (org.xml.sax.SAXParseException e) {
+            println "Unable to parse $url: $e.message"
+        }
+
+        return null;
+    }
+
+    @VisibleForTesting
     public static boolean match(String patternString, String matcherString) {
         final Pattern pattern = Pattern.compile(patternString);
         final Matcher matcher = pattern.matcher(matcherString);
