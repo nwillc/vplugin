@@ -20,7 +20,7 @@ apply plugin: 'release'
 apply plugin: 'maven'
 
 group = 'com.github.nwillc'
-version = '1.1'
+version = '1.2'
 
 dependencies {
     compile gradleApi()

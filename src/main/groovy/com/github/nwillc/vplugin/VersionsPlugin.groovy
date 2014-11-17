@@ -39,7 +39,7 @@ class VersionsPlugin implements Plugin<Project> {
 
     void apply(Project project) {
         project.task('versions') << {
-            def urls = repoUrls(project.getRepositories())
+            def urls = repoUrls(project)
             def checked = [:]
             println sprintf('%-40s%20s%20s', 'Dependency', 'Using', 'Update')
             println sprintf('%-40s%20s%20s', '----------', '-----', '------')
@@ -65,10 +65,24 @@ class VersionsPlugin implements Plugin<Project> {
         }
     }
 
-    private static String[] repoUrls(Collection<ArtifactRepository> repos) {
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize()
+    }
+
+    private static String[] repoUrls(Project project) {
         def urls = []
         println 'Searching repositories:'
-        for (ArtifactRepository repo : repos) {
+        for (ArtifactRepository repo : project.repositories) {
+            if (repo.hasProperty('url') && repo.url) {
+                def url = repo.url.toString()
+                if (url.startsWith('http')) {
+                    println '\t' + repo.name + ' at ' + url
+                    urls.add(url)
+                }
+            }
+        }
+        for (ArtifactRepository repo : project.buildscript.repositories) {
             if (repo.hasProperty('url') && repo.url) {
                 def url = repo.url.toString()
                 if (url.startsWith('http')) {
@@ -86,7 +100,12 @@ class VersionsPlugin implements Plugin<Project> {
         def fullUrl = "$url/$path/$name/maven-metadata.xml"
         try {
             def metadata = new XmlSlurper().parseText(fullUrl.toURL().text)
-            return metadata.versioning.latest
+            def latest = metadata.versioning.latest.text()
+            if (latest.length() == 0) {
+                def versions = metadata.versioning.versions.version.collect { it.text() }
+                latest = versions.last();
+            }
+            return latest
         } catch (FileNotFoundException e) {
             println "Unable to download $url: $e.message"
         } catch (org.xml.sax.SAXParseException e) {
