@@ -22,6 +22,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.repositories.ArtifactRepository
+import org.xml.sax.SAXParseException
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -108,7 +109,7 @@ class VersionsPlugin implements Plugin<Project> {
             return latest
         } catch (FileNotFoundException e) {
             println "Unable to download $url: $e.message"
-        } catch (org.xml.sax.SAXParseException e) {
+        } catch (SAXParseException e) {
             println "Unable to parse $url: $e.message"
         }
 
