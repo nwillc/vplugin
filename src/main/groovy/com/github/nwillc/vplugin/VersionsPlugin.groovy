@@ -77,7 +77,7 @@ class VersionsPlugin implements Plugin<Project> {
         for (ArtifactRepository repo : project.repositories) {
             if (repo.hasProperty('url') && repo.url) {
                 def url = repo.url.toString()
-                if (url.startsWith('http')) {
+                if (url.startsWith('http') && !urls.contains(url)) {
                     println '\t' + repo.name + ' at ' + url
                     urls.add(url)
                 }
@@ -86,7 +86,7 @@ class VersionsPlugin implements Plugin<Project> {
         for (ArtifactRepository repo : project.buildscript.repositories) {
             if (repo.hasProperty('url') && repo.url) {
                 def url = repo.url.toString()
-                if (url.startsWith('http')) {
+                if (url.startsWith('http') && !urls.contains(url)) {
                     println '\t' + repo.name + ' at ' + url
                     urls.add(url)
                 }

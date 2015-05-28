@@ -23,7 +23,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.tmatesoft.sqljet:sqljet:1.1.9',
-                    'au.com.ish.gradle:release:2.2.2'
+                  'au.com.ish.gradle:release:2.2.2'
     }
 }
 
@@ -47,7 +47,7 @@ dependencies {
 apply plugin: 'release'
 
 group = 'com.github.nwillc'
-version = '1.2.1'
+version = '1.2.2'
 targetCompatibility = "1.6"
 sourceCompatibility = "1.6"
 
