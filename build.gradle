@@ -47,7 +47,7 @@ dependencies {
 apply plugin: 'release'
 
 group = 'com.github.nwillc'
-version = '1.2.2'
+version = '1.2.3'
 targetCompatibility = "1.6"
 sourceCompatibility = "1.6"
 

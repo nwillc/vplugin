@@ -107,8 +107,7 @@ class VersionsPlugin implements Plugin<Project> {
                 latest = versions.last();
             }
             return latest
-        } catch (FileNotFoundException e) {
-            println "Unable to download $url: $e.message"
+        } catch (FileNotFoundException ignored) {
         } catch (SAXParseException e) {
             println "Unable to parse $url: $e.message"
         }
