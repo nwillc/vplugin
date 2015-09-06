@@ -46,7 +46,7 @@ class VersionsPlugin implements Plugin<Project> {
             println sprintf('%-40s%20s%20s', '----------', '-----', '------')
             project.configurations.each { Configuration configuration ->
                 configuration.allDependencies.each { Dependency dependency ->
-                    if (!dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
+                    if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
                         for (String url : urls) {
                             def newest = latest(url, dependency.group, dependency.name)
                             if (newest != null) {
