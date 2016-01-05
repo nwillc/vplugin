@@ -16,25 +16,32 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenLocal()
+        jcenter {
+            url 'http://jcenter.bintray.com'
+        }
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url 'https://plugins.gradle.org/m2/'
         }
     }
     dependencies {
         classpath 'org.tmatesoft.sqljet:sqljet:1.1.9',
-                  'au.com.ish.gradle:release:2.2.2'
+                  'au.com.ish.gradle:release:2.2.2',
+                  'com.gradle.publish:plugin-publish-plugin:0.9.2'
     }
 }
 
 plugins {
     id "groovy"
-    id "com.gradle.plugin-publish" version "0.9.0"
 }
 
+apply plugin: "com.gradle.plugin-publish"
+
 repositories {
-    mavenCentral()
-    jcenter()
+    mavenLocal()
+    jcenter {
+        url "http://jcenter.bintray.com"
+    }
 }
 
 dependencies {
@@ -47,9 +54,9 @@ dependencies {
 apply plugin: 'release'
 
 group = 'com.github.nwillc'
-version = '1.2.3'
+version = '1.2.4'
 targetCompatibility = "1.6"
-sourceCompatibility = "1.6"
+sourceCompatibility = "1.7"
 
 release {
     failOnSnapshotDependencies = true
@@ -75,7 +82,6 @@ artifacts {
     archives groovydocJar
     archives sourcesJar
 }
-
 
 pluginBundle {
     website = 'http://nwillc.github.io/vplugin/'

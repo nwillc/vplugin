@@ -17,8 +17,8 @@
 package com.github.nwillc.vplugin
 
 import com.google.common.annotations.VisibleForTesting
-import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.repositories.ArtifactRepository
@@ -28,15 +28,6 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class VersionsPlugin implements Plugin<Project> {
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone()
-    }
-
-    @Override
-    int hashCode() {
-        return super.hashCode()
-    }
 
     void apply(Project project) {
         project.task('versions') << {
@@ -64,11 +55,6 @@ class VersionsPlugin implements Plugin<Project> {
                 }
             }
         }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize()
     }
 
     private static String[] repoUrls(Project project) {

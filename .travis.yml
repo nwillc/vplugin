@@ -1,1 +1,3 @@
 language: groovy
+after_success:
+- "./gradlew -Dgradle.publish.key=${PUBLISH_K} -Dgradle.publish.secret=${PUBLISH_S} jar publishPlugins"
