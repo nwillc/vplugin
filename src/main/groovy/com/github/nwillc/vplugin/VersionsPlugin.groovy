@@ -29,28 +29,33 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class VersionsPlugin implements Plugin<Project> {
+    private static final String LONG_PAD = "                                                       "
+    private static final String SHORT_PAD = "                    "
 
     void apply(Project project) {
         project.task('versions') << {
             def urls = repoUrls(project)
             def checked = [:]
-            println sprintf('%-40s%20s%20s', 'Dependency', 'Using', 'Update')
-            println sprintf('%-40s%20s%20s', '----------', '-----', '------')
+            println "Dependency" + LONG_PAD.substring("Dependency".length()) + SHORT_PAD.substring("Using".length()) + "Using" + SHORT_PAD.substring("Update".length()) + "Update"
+            println "----------" + LONG_PAD.substring("----------".length()) + SHORT_PAD.substring("-----".length()) + "-----" + SHORT_PAD.substring("------".length()) + "------"
             project.configurations.each { Configuration configuration ->
                 configuration.allDependencies.each { Dependency dependency ->
                     if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
+                        def maxVersion = dependency.version
                         for (String url : urls) {
                             def newest = latest(url, dependency.group, dependency.name)
-                            if (newest != null) {
-                                if (match(dependency.version, newest.toString())){
-                                    println sprintf('%-40s%20s',"$dependency.group:$dependency.name", newest)
-                                } else {
-                                    println sprintf('%-40s%20s ->%17s',"$dependency.group:$dependency.name",dependency.version, newest)
-                                }
-                                break
+                            if (newest != null && newest > maxVersion) {
+                                maxVersion = newest
                             }
                         }
-
+                        if (maxVersion != null) {
+                            def name = "$dependency.group:$dependency.name"
+                            print name + LONG_PAD.substring(name.length()) + SHORT_PAD.substring(dependency.version.length()) + dependency.version
+                            if (!match(dependency.version, maxVersion)) {
+                                print " ->" + SHORT_PAD.substring(maxVersion.length() + 3) + maxVersion
+                            }
+                            println ""
+                        }
                         checked[dependency] = true
                     }
                 }
@@ -84,14 +89,14 @@ class VersionsPlugin implements Plugin<Project> {
     }
 
     private static String latest(String url, String group, String name) {
-        def path = group.replace('.','/')
-        def fullUrl = "$url/$path/$name/maven-metadata.xml"
+        def path = group.replace('.', '/')
+        def fullUrl = (url.endsWith("/") ? url : url + '/') + "$path/$name/maven-metadata.xml"
         try {
             def metadata = new XmlSlurper().parseText(fullUrl.toURL().text)
             def latest = metadata.versioning.latest.text()
             if (latest.length() == 0) {
                 def versions = metadata.versioning.versions.version.collect { it.text() }
-                latest = versions.last();
+                latest = versions.last()
             }
             return latest
         } catch (FileNotFoundException ignored) {
@@ -99,13 +104,13 @@ class VersionsPlugin implements Plugin<Project> {
             println "Unable to parse $url: $e.message"
         }
 
-        return null;
+        return null
     }
 
     @VisibleForTesting
-    public static boolean match(String patternString, String matcherString) {
-        final Pattern pattern = Pattern.compile(patternString);
-        final Matcher matcher = pattern.matcher(matcherString);
-        return matcher.find();
+    static boolean match(String patternString, String matcherString) {
+        final Pattern pattern = Pattern.compile(patternString)
+        final Matcher matcher = pattern.matcher(matcherString)
+        return matcher.find()
     }
 }
