@@ -54,7 +54,7 @@ apply plugin: 'maven'
 apply plugin: "com.gradle.plugin-publish"
 
 group = 'com.github.nwillc'
-version = '1.3.1'
+version = '1.3.2'
 targetCompatibility = "1.6"
 sourceCompatibility = "1.6"
 
@@ -86,7 +86,10 @@ artifacts {
 pluginBundle {
     website = 'http://nwillc.github.io/vplugin/'
     vcsUrl = 'https://github.com/nwillc/vplugin'
-    description = 'Gradle plugin to report newer versions of dependencies'
+    description = """Gradle plugin to report newer versions of dependencies. Traverses your
+compile and runtime dependencies. For each dependency, all of your declared repositories are
+checked, and the highest version is found. A report is generated showing the dependencies, 
+their current version, and higher ones if available."""
     tags = ['versions']
 
     plugins {
