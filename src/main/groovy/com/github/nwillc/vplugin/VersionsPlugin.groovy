@@ -92,16 +92,18 @@ class VersionsPlugin implements Plugin<Project> {
         def path = group.replace('.', '/')
         def fullUrl = (url.endsWith("/") ? url : url + '/') + "$path/$name/maven-metadata.xml"
         try {
-            def metadata = new XmlSlurper().parseText(fullUrl.toURL().text)
+            def text = fullUrl.toURL().text
+            if (!text.contains("<?xml")) {
+                return null;
+            }
+            def metadata = new XmlSlurper().parseText(text)
             def latest = metadata.versioning.latest.text()
             if (latest.length() == 0) {
                 def versions = metadata.versioning.versions.version.collect { it.text() }
                 latest = versions.last()
             }
             return latest
-        } catch (FileNotFoundException ignored) {
-        } catch (SAXParseException e) {
-            println "Unable to parse $url: $e.message"
+        } catch (Exception ignored) {
         }
 
         return null

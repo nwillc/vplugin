@@ -54,7 +54,7 @@ apply plugin: 'maven'
 apply plugin: "com.gradle.plugin-publish"
 
 group = 'com.github.nwillc'
-version = '1.3.0'
+version = '1.3.1'
 targetCompatibility = "1.6"
 sourceCompatibility = "1.6"
 
