@@ -24,41 +24,49 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.repositories.ArtifactRepository
 import org.xml.sax.SAXParseException
+import sun.util.logging.PlatformLogger
 
+import java.util.logging.Level
+import java.util.logging.Logger
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class VersionsPlugin implements Plugin<Project> {
-    private static final String LONG_PAD = "                                                       "
+    private static final Logger LOGGER = Logger.getLogger(VersionsPlugin.class.getName())
+    private static final String LONG_PAD = "                                                                 "
     private static final String SHORT_PAD = "                    "
 
     void apply(Project project) {
         project.task('versions') << {
-            def urls = repoUrls(project)
-            def checked = [:]
-            println "Dependency" + LONG_PAD.substring("Dependency".length()) + SHORT_PAD.substring("Using".length()) + "Using" + SHORT_PAD.substring("Update".length()) + "Update"
-            println "----------" + LONG_PAD.substring("----------".length()) + SHORT_PAD.substring("-----".length()) + "-----" + SHORT_PAD.substring("------".length()) + "------"
-            project.configurations.each { Configuration configuration ->
-                configuration.allDependencies.each { Dependency dependency ->
-                    if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
-                        def maxVersion = dependency.version
-                        for (String url : urls) {
-                            def newest = latest(url, dependency.group, dependency.name)
-                            if (newest != null && newest > maxVersion) {
-                                maxVersion = newest
+            try {
+                def urls = repoUrls(project)
+                def checked = [:]
+                println pad("Dependency", LONG_PAD) + pad("Using", SHORT_PAD) + "Update"
+                println pad("----------", LONG_PAD) + pad("-----", SHORT_PAD) + "------"
+                project.configurations.each { Configuration configuration ->
+                    configuration.allDependencies.each { Dependency dependency ->
+                        if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
+                            def maxVersion = dependency.version
+                            for (String url : urls) {
+                                def newest = latest(url, dependency.group, dependency.name)
+                                if (newest != null && newest > maxVersion) {
+                                    maxVersion = newest
+                                }
                             }
-                        }
-                        if (maxVersion != null) {
-                            def name = "$dependency.group:$dependency.name"
-                            print name + LONG_PAD.substring(name.length()) + SHORT_PAD.substring(dependency.version.length()) + dependency.version
-                            if (!match(dependency.version, maxVersion)) {
-                                print " ->" + SHORT_PAD.substring(maxVersion.length() + 3) + maxVersion
+                            if (maxVersion != null) {
+                                def name = "$dependency.group:$dependency.name"
+                                print pad(name, LONG_PAD) + pad(dependency.version, SHORT_PAD)
+                                if (!match(dependency.version, maxVersion)) {
+                                    print maxVersion
+                                }
+                                println ""
                             }
-                            println ""
+                            checked[dependency] = true
                         }
-                        checked[dependency] = true
                     }
                 }
+            } catch (Exception e) {
+                LOGGER.log(Level.WARNING, "Error: " + e, e)
             }
         }
     }
@@ -94,7 +102,7 @@ class VersionsPlugin implements Plugin<Project> {
         try {
             def text = fullUrl.toURL().text
             if (!text.contains("<?xml")) {
-                return null;
+                return null
             }
             def metadata = new XmlSlurper().parseText(text)
             def latest = metadata.versioning.latest.text()
@@ -104,9 +112,22 @@ class VersionsPlugin implements Plugin<Project> {
             }
             return latest
         } catch (Exception ignored) {
+            LOGGER.fine("Exception: " + ignored)
         }
 
         return null
+    }
+
+    private static String pad(String value, String pad) {
+        if (value == null) {
+            return pad;
+        }
+
+        if (value.length() < pad.length()) {
+            return value + pad.substring(value.length())
+        }
+
+        return value + ' ';
     }
 
     @VisibleForTesting
