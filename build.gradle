@@ -17,9 +17,7 @@
 buildscript {
     repositories {
         mavenLocal()
-        jcenter {
-            url 'http://jcenter.bintray.com'
-        }
+        jcenter()
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
