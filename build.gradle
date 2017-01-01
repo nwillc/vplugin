@@ -51,7 +51,7 @@ apply plugin: 'release'
 apply plugin: 'maven'
 
 group = 'com.github.nwillc'
-version = '1.3.5'
+version = '2.0.0'
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
 
@@ -84,25 +84,10 @@ artifacts {
 pluginBundle {
     website = 'http://nwillc.github.io/vplugin/'
     vcsUrl = 'https://github.com/nwillc/vplugin'
-    description = """Gradle plugin to report newer versions of dependencies. Traverses your
+    description = """Gradle plugin to report newer versions of dependencies. Traverses your plugin,
 compile and runtime dependencies. For each dependency, all of your declared repositories are
 checked, and the highest version is found. A report is generated showing the dependencies, 
 their current version, and higher ones if available.
-<pre>
-   ./gradlew versions
-   :versions
-   Searching repositories:
-           BintrayJCenter at https://jcenter.bintray.com/
-           MavenRepo at https://repo1.maven.org/maven2/
-           maven at https://maven.eveoh.nl/content/repositories/releases
-           maven2 at https://plugins.gradle.org/m2
-
-   Dependency                                                            Using              Update
-   ----------                                                            -----              ------
-   com.sparkjava:spark-core                                                2.3              2.5.1
-   commons-cli:commons-cli                                                 1.3
-   io.orchestrate:orchestrate-client                                    0.13.0
-</pre>
 """
     tags = ['versions']
 

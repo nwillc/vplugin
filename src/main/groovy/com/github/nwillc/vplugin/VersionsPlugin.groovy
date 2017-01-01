@@ -21,10 +21,10 @@ import com.google.common.annotations.VisibleForTesting
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.ArtifactRepository
-import org.xml.sax.SAXParseException
-import sun.util.logging.PlatformLogger
 
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -39,51 +39,53 @@ class VersionsPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.task('versions').doLast {
             try {
-                def urls = repoUrls(project)
-                def checked = [:]
-                println pad("Dependency", LONG_PAD) + pad("Using", SHORT_PAD) + "Update"
-                println pad("----------", LONG_PAD) + pad("-----", SHORT_PAD) + "------"
-                project.configurations.each { Configuration configuration ->
-                    configuration.allDependencies.each { Dependency dependency ->
-                        if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
-                            def maxVersion = dependency.version
-                            for (String url : urls) {
-                                def newest = latest(url, dependency.group, dependency.name)
-                                if (newest != null && newest > maxVersion) {
-                                    maxVersion = newest
-                                }
-                            }
-                            if (maxVersion != null) {
-                                def name = "$dependency.group:$dependency.name"
-                                print pad(name, LONG_PAD) + pad(dependency.version, SHORT_PAD)
-                                if (!match(dependency.version, maxVersion)) {
-                                    print maxVersion
-                                }
-                                println ""
-                            }
-                            checked[dependency] = true
-                        }
-                    }
-                }
+                println "\nPlugins"
+                println "========"
+                versions(project.buildscript.configurations, project.buildscript.repositories)
+                println "\nDependencies"
+                println "============="
+                versions(project.configurations, project.repositories)
+                print "\n"
             } catch (Exception e) {
                 LOGGER.log(Level.WARNING, "Error: " + e, e)
             }
         }
     }
 
-    private static String[] repoUrls(Project project) {
-        def urls = []
-        println 'Searching repositories:'
-        for (ArtifactRepository repo : project.repositories) {
-            if (repo.hasProperty('url') && repo.url) {
-                def url = repo.url.toString()
-                if (url.startsWith('http') && !urls.contains(url)) {
-                    println '\t' + repo.name + ' at ' + url
-                    urls.add(url)
+    private static void versions(ConfigurationContainer configurationContainer, RepositoryHandler repositoryHandler) {
+        def urls = repoUrls(repositoryHandler)
+        def checked = [:]
+        println pad("Artifact", LONG_PAD) + pad("Using", SHORT_PAD) + "Update"
+        println pad("--------", LONG_PAD) + pad("-----", SHORT_PAD) + "------"
+        configurationContainer.each { Configuration configuration ->
+            configuration.allDependencies.each { Dependency dependency ->
+                if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
+                    def maxVersion = dependency.version
+                    for (String url : urls) {
+                        def newest = latest(url, dependency.group, dependency.name)
+                        if (newest != null && newest > maxVersion) {
+                            maxVersion = newest
+                        }
+                    }
+                    if (maxVersion != null) {
+                        def name = "$dependency.group:$dependency.name"
+                        print pad(name, LONG_PAD) + pad(dependency.version, SHORT_PAD)
+                        if (!match(dependency.version, maxVersion)) {
+                            print maxVersion
+                        }
+                        println ""
+                    }
+                    checked[dependency] = true
                 }
             }
         }
-        for (ArtifactRepository repo : project.buildscript.repositories) {
+    }
+
+    private static String[] repoUrls(RepositoryHandler repositoryHandler) {
+        def urls = []
+        println 'Repositories'
+        println '------------'
+        for (ArtifactRepository repo : repositoryHandler) {
             if (repo.hasProperty('url') && repo.url) {
                 def url = repo.url.toString()
                 if (url.startsWith('http') && !urls.contains(url)) {
