@@ -51,7 +51,7 @@ apply plugin: 'release'
 apply plugin: 'maven'
 
 group = 'com.github.nwillc'
-version = '2.0.0'
+version = '2.0.1'
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
 
