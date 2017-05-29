@@ -37,7 +37,7 @@ class VersionsPlugin implements Plugin<Project> {
     private static final String SHORT_PAD = "                    "
 
     void apply(Project project) {
-        project.task('versions').doLast {
+        project.task('versions').doLast() {
             try {
                 println "\nPlugins"
                 println "========"

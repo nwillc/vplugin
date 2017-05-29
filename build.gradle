@@ -44,14 +44,14 @@ dependencies {
     compile localGroovy()
     compile "com.google.guava:guava:20.0"
     testCompile 'junit:junit:4.+',
-            'org.assertj:assertj-core:1.+'
+            'org.assertj:assertj-core:2.+'
 }
 
 apply plugin: 'release'
 apply plugin: 'maven'
 
 group = 'com.github.nwillc'
-version = '2.0.1'
+version = '2.0.2'
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
 
