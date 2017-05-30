@@ -24,7 +24,7 @@ import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.ArtifactRepository
-import org.gradle.internal.impldep.org.apache.maven.artifact.versioning.ComparableVersion
+import org.apache.maven.artifact.versioning.ComparableVersion
 
 import java.util.logging.Level
 import java.util.logging.Logger

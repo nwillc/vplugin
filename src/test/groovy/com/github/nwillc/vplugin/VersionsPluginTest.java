@@ -17,7 +17,7 @@
 
 package com.github.nwillc.vplugin;
 
-import org.gradle.internal.impldep.org.apache.maven.artifact.versioning.ComparableVersion;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static com.github.nwillc.vplugin.VersionsPlugin.match;
