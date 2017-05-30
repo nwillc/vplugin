@@ -17,7 +17,6 @@
 
 package com.github.nwillc.vplugin
 
-import com.google.common.annotations.VisibleForTesting
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -25,6 +24,7 @@ import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.ArtifactRepository
+import org.gradle.internal.impldep.org.apache.maven.artifact.versioning.ComparableVersion
 
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -60,18 +60,18 @@ class VersionsPlugin implements Plugin<Project> {
         configurationContainer.each { Configuration configuration ->
             configuration.allDependencies.each { Dependency dependency ->
                 if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
-                    def maxVersion = dependency.version
+                    def maxVersion = new ComparableVersion(dependency.version)
                     for (String url : urls) {
                         def newest = latest(url, dependency.group, dependency.name)
-                        if (newest != null && newest > maxVersion) {
-                            maxVersion = newest
+                        if (newest != null) {
+                            maxVersion = max(maxVersion, new ComparableVersion(newest))
                         }
                     }
                     if (maxVersion != null) {
                         def name = "$dependency.group:$dependency.name"
                         print pad(name, LONG_PAD) + pad(dependency.version, SHORT_PAD)
-                        if (!match(dependency.version, maxVersion)) {
-                            print maxVersion
+                        if (!match(dependency.version, maxVersion.toString())) {
+                            print maxVersion.toString()
                         }
                         println ""
                     }
@@ -122,17 +122,22 @@ class VersionsPlugin implements Plugin<Project> {
 
     private static String pad(String value, String pad) {
         if (value == null) {
-            return pad;
+            return pad
         }
 
         if (value.length() < pad.length()) {
             return value + pad.substring(value.length())
         }
 
-        return value + ' ';
+        return value + ' '
     }
 
-    @VisibleForTesting
+    // Visible for testing
+    static ComparableVersion max(final ComparableVersion a, final ComparableVersion b) {
+        return a.compareTo(b) > 0 ? a : b
+    }
+
+    // Visible for testing
     static boolean match(String patternString, String matcherString) {
         final Pattern pattern = Pattern.compile(patternString)
         final Matcher matcher = pattern.matcher(matcherString)

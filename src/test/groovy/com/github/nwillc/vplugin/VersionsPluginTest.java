@@ -17,6 +17,7 @@
 
 package com.github.nwillc.vplugin;
 
+import org.gradle.internal.impldep.org.apache.maven.artifact.versioning.ComparableVersion;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static com.github.nwillc.vplugin.VersionsPlugin.match;
@@ -32,5 +33,26 @@ public class VersionsPluginTest {
     @Test
     public void testMatcherFalse() throws Exception {
         assertThat(VersionsPlugin.match("4.+", "3.9")).isFalse();
+    }
+
+    @Test
+    public void testMax() throws Exception {
+        ComparableVersion a, b;
+
+        a = new ComparableVersion("1.0.1");
+        b = new ComparableVersion("1.0.0");
+        assertThat(VersionsPlugin.max(a,b)).isEqualTo(a);
+
+        a = new ComparableVersion("1.0.0");
+        b = new ComparableVersion("1.1.0");
+        assertThat(VersionsPlugin.max(a,b)).isEqualTo(b);
+
+        a = new ComparableVersion("1.0.1-rc1");
+        b = new ComparableVersion("1.0.0");
+        assertThat(VersionsPlugin.max(a,b)).isEqualTo(a);
+
+        a = new ComparableVersion("1.0.1");
+        b = new ComparableVersion("1.0.10");
+        assertThat(VersionsPlugin.max(a,b)).isEqualTo(b);
     }
 }

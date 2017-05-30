@@ -42,7 +42,6 @@ repositories {
 dependencies {
     compile gradleApi()
     compile localGroovy()
-    compile "com.google.guava:guava:20.0"
     testCompile 'junit:junit:4.+',
             'org.assertj:assertj-core:2.+'
 }
@@ -51,7 +50,7 @@ apply plugin: 'release'
 apply plugin: 'maven'
 
 group = 'com.github.nwillc'
-version = '2.0.2'
+version = '2.1.0'
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
 
@@ -86,7 +85,7 @@ pluginBundle {
     vcsUrl = 'https://github.com/nwillc/vplugin'
     description = """Gradle plugin to report newer versions of dependencies. Traverses your plugin,
 compile and runtime dependencies. For each dependency, all of your declared repositories are
-checked, and the highest version is found. A report is generated showing the dependencies, 
+checked, and the highest version is found. A text report is generated showing the dependencies, 
 their current version, and higher ones if available.
 """
     tags = ['versions']
