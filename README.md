@@ -1,6 +1,9 @@
 # vplugin
 
-A Gradle plugin to report newer versions of a builds dependencies.
+A Gradle plugin to report newer versions of a builds dependencies. Traverses your plugin,
+compile and runtime dependencies. For each dependency, all of your declared repositories are
+checked, and the highest version is found. A text report is generated showing the dependencies, 
+their current version, and higher ones if available.
 
 ## Use
 
