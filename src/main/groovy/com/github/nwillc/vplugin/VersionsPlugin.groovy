@@ -140,7 +140,7 @@ class VersionsPlugin implements Plugin<Project> {
 
     // Visible for testing
     static ComparableVersion max(final ComparableVersion a, final ComparableVersion b) {
-        return a.compareTo(b) > 0 ? a : b
+        return a > b ? a : b
     }
 
     // Visible for testing

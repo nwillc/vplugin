@@ -19,7 +19,8 @@ plugins {
     id "groovy"
     id "maven"
     id "com.gradle.plugin-publish" version "0.10.0"
-    id "com.github.nwillc.vplugin" version "2.1.1"
+    id "com.github.nwillc.vplugin" version "2.2.2"
+    id "com.github.ngyewch.git-version" version "0.2"
 }
 
 repositories {
@@ -35,9 +36,11 @@ dependencies {
 }
 
 group = "com.github.nwillc"
-version = "2.2.2"
+version = "${gitVersion.gitVersionInfo.gitVersionName.substring(1)}"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
+
+logger.lifecycle("${project.name} ${version}")
 
 test {
     useJUnitPlatform()
@@ -56,6 +59,10 @@ test {
         exceptionFormat "full"
         showStandardStreams true
     }
+}
+
+gitVersion {
+    gitTagPrefix = "v"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -101,3 +108,5 @@ their current version, and higher ones if available.
         }
     }
 }
+
+publishPlugins.onlyIf { !version.toString().contains("-")}
