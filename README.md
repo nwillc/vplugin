@@ -11,7 +11,7 @@ See [Gradle Plugins](https://plugins.gradle.org/plugin/com.github.nwillc.vplugin
 
 ## Configuring the Plugin
 
-The plugin requires no configuration.
+The plugin requires no configuration it relies on the existing repos and dependencies.
 
 ## Running
 
@@ -21,6 +21,7 @@ Plugins
 ========
 Repositories
 ------------
+        https://plugins.gradle.org/m2/
 
 Artifact                                                         Using               Update
 --------                                                         -----               ------
@@ -31,7 +32,7 @@ Dependencies
 =============
 Repositories
 ------------
-        BintrayJCenter at https://jcenter.bintray.com/
+        https://jcenter.bintray.com/
 
 Artifact                                                         Using               Update
 --------                                                         -----               ------

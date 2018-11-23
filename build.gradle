@@ -15,9 +15,10 @@
  */
 
 plugins {
+    id "java-gradle-plugin"
     id "groovy"
     id "maven"
-    id "com.gradle.plugin-publish" version "0.9.6"
+    id "com.gradle.plugin-publish" version "0.10.0"
     id "com.github.nwillc.vplugin" version "2.1.1"
 }
 
@@ -27,8 +28,6 @@ repositories {
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
     compile "org.apache.maven:maven-artifact:3.6.0"
     testCompile "org.junit.jupiter:junit-jupiter-api:5.3.1",
             "org.assertj:assertj-core:3.11.1"
@@ -36,7 +35,7 @@ dependencies {
 }
 
 group = "com.github.nwillc"
-version = "2.2.1"
+version = "2.2.2"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 
@@ -77,9 +76,17 @@ artifacts {
     archives sourcesJar
 }
 
+gradlePlugin {
+    plugins {
+        versionsPlugin {
+            id = "${group}.${project.name}"
+            implementationClass = "com.github.nwillc.vplugin.VersionsPlugin"
+        }
+    }
+}
 
 pluginBundle {
-    website = "https://github.com/nwillc/vplugin"
+    website = "https://github.com/nwillc/vplugin/"
     vcsUrl = "https://github.com/nwillc/vplugin"
     description = """Gradle plugin to report newer versions of dependencies. Traverses your plugin,
 compile and runtime dependencies. For each dependency, all of your declared repositories are
@@ -90,7 +97,6 @@ their current version, and higher ones if available.
 
     plugins {
         versionsPlugin {
-            id = "com.github.nwillc.vplugin"
             displayName = "Gradle versions plugin"
         }
     }
