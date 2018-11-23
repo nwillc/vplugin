@@ -16,12 +16,14 @@
 
 plugins {
     id "groovy"
+    id "maven"
     id "com.gradle.plugin-publish" version "0.9.6"
     id "com.github.nwillc.vplugin" version "2.1.1"
 }
 
 repositories {
     jcenter()
+    mavenLocal()
 }
 
 dependencies {
@@ -34,7 +36,7 @@ dependencies {
 }
 
 group = "com.github.nwillc"
-version = "2.2.0"
+version = "2.2.1"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 

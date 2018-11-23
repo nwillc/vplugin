@@ -58,6 +58,12 @@ class VersionsPlugin implements Plugin<Project> {
             RepositoryHandler repositoryHandler,
             String ... defaultRepos) {
         def urls = repoUrls(repositoryHandler) + defaultRepos
+        println 'Repositories'
+        println '------------'
+        for (def url : urls) {
+            println "\t$url"  
+        }
+        println ''
         def checked = [:]
         println pad("Artifact", LONG_PAD) + pad("Using", SHORT_PAD) + "Update"
         println pad("--------", LONG_PAD) + pad("-----", SHORT_PAD) + "------"
@@ -87,18 +93,14 @@ class VersionsPlugin implements Plugin<Project> {
 
     private static String[] repoUrls(RepositoryHandler repositoryHandler) {
         def urls = []
-        println 'Repositories'
-        println '------------'
         for (ArtifactRepository repo : repositoryHandler) {
             if (repo.hasProperty('url') && repo.url) {
                 def url = repo.url.toString()
                 if (url.startsWith('http') && !urls.contains(url)) {
-                    println '\t' + repo.name + ' at ' + url
                     urls.add(url)
                 }
             }
         }
-        println ''
         return urls
     }
 
