@@ -26,7 +26,7 @@ Repositories
 Artifact                                                         Using               Update
 --------                                                         -----               ------
 com.gradle.plugin-publish:com.gradle.plugin-publish.gradle.plugin 0.9.6
-com.github.nwillc.vplugin:com.github.nwillc.vplugin.gradle.plugin 2.1.1
+com.github.nwillc.vplugin:com.github.nwillc.vplugin.gradle.plugin 2.1.1              2.2.2
 
 Dependencies
 =============
