@@ -77,7 +77,7 @@ artifacts {
 
 
 pluginBundle {
-    website = "http://nwillc.github.io/vplugin/"
+    website = "https://github.com/nwillc/vplugin"
     vcsUrl = "https://github.com/nwillc/vplugin"
     description = """Gradle plugin to report newer versions of dependencies. Traverses your plugin,
 compile and runtime dependencies. For each dependency, all of your declared repositories are
