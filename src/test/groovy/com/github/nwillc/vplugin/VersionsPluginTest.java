@@ -18,25 +18,26 @@
 package com.github.nwillc.vplugin;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static com.github.nwillc.vplugin.VersionsPlugin.match;
 
-public class VersionsPluginTest {
+class VersionsPluginTest {
 
     @Test
-    public void testMatcherTrue() throws Exception {
+    void testMatcherTrue() throws Exception {
         assertThat(match("4.1.1", "4.1.1")).isTrue();
         assertThat(match("4.+", "4.11")).isTrue();
     }
 
     @Test
-    public void testMatcherFalse() throws Exception {
+    void testMatcherFalse() throws Exception {
         assertThat(VersionsPlugin.match("4.+", "3.9")).isFalse();
     }
 
     @Test
-    public void testMax() throws Exception {
+    void testMax() throws Exception {
         ComparableVersion a, b;
 
         a = new ComparableVersion("1.0.1");

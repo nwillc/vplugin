@@ -41,7 +41,8 @@ class VersionsPlugin implements Plugin<Project> {
             try {
                 println "\nPlugins"
                 println "========"
-                versions(project.buildscript.configurations, project.buildscript.repositories)
+                versions(project.buildscript.configurations, project.buildscript.repositories,
+                        "https://plugins.gradle.org/m2/")
                 println "\nDependencies"
                 println "============="
                 versions(project.configurations, project.repositories)
@@ -52,8 +53,11 @@ class VersionsPlugin implements Plugin<Project> {
         }
     }
 
-    private static void versions(ConfigurationContainer configurationContainer, RepositoryHandler repositoryHandler) {
-        def urls = repoUrls(repositoryHandler)
+    private static void versions(
+            ConfigurationContainer configurationContainer,
+            RepositoryHandler repositoryHandler,
+            String ... defaultRepos) {
+        def urls = repoUrls(repositoryHandler) + defaultRepos
         def checked = [:]
         println pad("Artifact", LONG_PAD) + pad("Using", SHORT_PAD) + "Update"
         println pad("--------", LONG_PAD) + pad("-----", SHORT_PAD) + "------"
