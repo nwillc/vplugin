@@ -45,8 +45,8 @@ Artifact                                                                        
 io.mockk:mockk                                                                      1.8.13.kotlin13
 org.assertj:assertj-core                                                            3.11.1
 org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable                           1.3.11
-org.junit.jupiter:junit-jupiter-api                                                 5.3.2
-org.junit.jupiter:junit-jupiter-engine                                              5.3.2
+org.junit.jupiter:junit-jupiter-api                                                 5.3.1              5.3.2
+org.junit.jupiter:junit-jupiter-engine                                              5.3.1              5.3.2
 ```
 
 -----
