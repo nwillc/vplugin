@@ -14,14 +14,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+
+    dependencies {
+//       classpath 'com.github.nwillc:vplugin:2.2.3-dirty'
+    }
+}
+
 plugins {
     id "java-gradle-plugin"
     id "groovy"
     id "maven"
     id "com.gradle.plugin-publish" version "0.10.0"
-    id "com.github.nwillc.vplugin" version "2.2.2"
     id "com.github.ngyewch.git-version" version "0.2"
 }
+
+// apply plugin: 'com.github.nwillc.vplugin'
 
 repositories {
     jcenter()
@@ -29,10 +40,10 @@ repositories {
 }
 
 dependencies {
-    compile "org.apache.maven:maven-artifact:3.6.0"
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.3.1",
+    implementation "org.apache.maven:maven-artifact:3.6.0"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.2",
             "org.assertj:assertj-core:3.11.1"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.3.1"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.3.2"
 }
 
 group = "com.github.nwillc"
@@ -109,4 +120,4 @@ their current version, and higher ones if available.
     }
 }
 
-publishPlugins.onlyIf { !version.toString().contains("-")}
+publishPlugins.onlyIf { !version.toString().contains("-") }

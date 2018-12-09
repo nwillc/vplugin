@@ -17,6 +17,7 @@
 
 package com.github.nwillc.vplugin
 
+import org.apache.maven.artifact.versioning.ComparableVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -24,7 +25,6 @@ import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.ArtifactRepository
-import org.apache.maven.artifact.versioning.ComparableVersion
 
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -33,18 +33,16 @@ import java.util.regex.Pattern
 
 class VersionsPlugin implements Plugin<Project> {
     private static final Logger LOGGER = Logger.getLogger(VersionsPlugin.class.getName())
-    private static final String LONG_PAD = "                                                                 "
-    private static final String SHORT_PAD = "                    "
 
     void apply(Project project) {
         project.task('versions').doLast() {
             try {
                 println "\nPlugins"
-                println "========"
+                println "======="
                 versions(project.buildscript.configurations, project.buildscript.repositories,
                         "https://plugins.gradle.org/m2/")
                 println "\nDependencies"
-                println "============="
+                println "============"
                 versions(project.configurations, project.repositories)
                 print "\n"
             } catch (Exception e) {
@@ -56,17 +54,20 @@ class VersionsPlugin implements Plugin<Project> {
     private static void versions(
             ConfigurationContainer configurationContainer,
             RepositoryHandler repositoryHandler,
-            String ... defaultRepos) {
+            String... defaultRepos) {
         def urls = repoUrls(repositoryHandler) + defaultRepos
         println 'Repositories'
         println '------------'
         for (def url : urls) {
-            println "\t$url"  
+            println "\t$url"
         }
         println ''
         def checked = [:]
-        println pad("Artifact", LONG_PAD) + pad("Using", SHORT_PAD) + "Update"
-        println pad("--------", LONG_PAD) + pad("-----", SHORT_PAD) + "------"
+        List<VersionInfo> versionInfoList = []
+
+        def artifactPad = 80
+        def versionPad = 10
+
         configurationContainer.each { Configuration configuration ->
             configuration.allDependencies.each { Dependency dependency ->
                 if (dependency.version != null && !dependency.version.contains('SNAPSHOT') && !checked[dependency]) {
@@ -78,16 +79,28 @@ class VersionsPlugin implements Plugin<Project> {
                         }
                     }
                     if (maxVersion != null) {
-                        def name = "$dependency.group:$dependency.name"
-                        print pad(name, LONG_PAD) + pad(dependency.version, SHORT_PAD)
-                        if (!match(dependency.version, maxVersion.toString())) {
-                            print maxVersion.toString()
-                        }
-                        println ""
+                        def versionInfo = new VersionInfo()
+                        versionInfo.artifact = "${dependency.group}:${dependency.name}"
+                        versionInfo.version = dependency.version
+                        versionInfo.available = match(dependency.version, maxVersion.toString()) ? "" : maxVersion
+                        versionInfoList.add(versionInfo)
+                        artifactPad = Math.max(artifactPad, versionInfo.artifact.length())
+                        versionPad = Math.max(versionPad, versionInfo.version.length())
                     }
                     checked[dependency] = true
                 }
             }
+        }
+
+        artifactPad += 4
+        versionPad += 4
+
+        println String.format("%-${artifactPad}s%-${versionPad}s%s", "Artifact", "Using", "Update")
+        println String.format("%-${artifactPad}s%-${versionPad}s%s", "--------", "-----", "------")
+
+        versionInfoList.sort { it.artifact }.each {
+            println String.format("%-${artifactPad}s%-${versionPad}s%s",
+                    it.artifact, it.version, it.available)
         }
     }
 
@@ -124,18 +137,6 @@ class VersionsPlugin implements Plugin<Project> {
         }
 
         return null
-    }
-
-    private static String pad(String value, String pad) {
-        if (value == null) {
-            return pad
-        }
-
-        if (value.length() < pad.length()) {
-            return value + pad.substring(value.length())
-        }
-
-        return value + ' '
     }
 
     // Visible for testing
