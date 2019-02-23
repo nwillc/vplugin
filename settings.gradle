@@ -14,5 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-rootProject.name = 'vplugin'
+//pluginManagement {
+//    repositories {
+//        maven {
+//            url 'http://localhost:8081/repository/gradle-plugins/'
+//        }
+//    }
+//}
 
+rootProject.name = 'vplugin'

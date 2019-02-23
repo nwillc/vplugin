@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016, nwillc@gmail.com
- *
+ * Copyright (c) 2019, nwillc@gmail.com
+ *  
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies.
@@ -28,8 +28,7 @@ plugins {
     id "java-gradle-plugin"
     id "groovy"
     id "maven"
-    id "com.gradle.plugin-publish" version "0.10.0"
-    id "com.github.ngyewch.git-version" version "0.2"
+    id "com.gradle.plugin-publish" version "0.10.1"
 }
 
 // apply plugin: 'com.github.nwillc.vplugin'
@@ -42,12 +41,12 @@ repositories {
 dependencies {
     implementation "org.apache.maven:maven-artifact:3.6.0"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.2",
-            "org.assertj:assertj-core:3.11.1"
+                        "org.assertj:assertj-core:3.11.1"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.3.2"
 }
 
 group = "com.github.nwillc"
-version = "${gitVersion.gitVersionInfo.gitVersionName.substring(1)}"
+version = "2.3.1-SNAPSHOT"
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 
@@ -70,10 +69,6 @@ test {
         exceptionFormat "full"
         showStandardStreams true
     }
-}
-
-gitVersion {
-    gitTagPrefix = "v"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -106,7 +101,7 @@ gradlePlugin {
 pluginBundle {
     website = "https://github.com/nwillc/vplugin/"
     vcsUrl = "https://github.com/nwillc/vplugin"
-    description = """Gradle plugin to report newer versions of dependencies. Traverses your plugin,
+    description = """Gradle plugin to report newer versions of dependencies. Traverses your buildscript,
 compile and runtime dependencies. For each dependency, all of your declared repositories are
 checked, and the highest version is found. A text report is generated showing the dependencies, 
 their current version, and higher ones if available.
