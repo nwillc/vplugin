@@ -18,12 +18,25 @@
 package com.github.nwillc.vplugin;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.gradle.api.Project;
+import org.gradle.api.plugins.PluginManager;
+import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static com.github.nwillc.vplugin.VersionsPlugin.match;
 
 class VersionsPluginTest {
+
+    @Test
+    void testPlugin() {
+        Project project = ProjectBuilder.builder().build();
+        project.getPluginManager().apply("com.github.nwillc.vplugin");
+        final PluginManager pluginManager = project.getPluginManager();
+        assertThat(pluginManager.hasPlugin("com.github.nwillc.vplugin")).isTrue();
+
+        assertThat(project.getTasks().getByName("versions")).isNotNull();
+    }
 
     @Test
     void testMatcherTrue() throws Exception {
