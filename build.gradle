@@ -20,7 +20,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.nwillc:vplugin:2.3.1-SNAPSHOT'
+        //classpath 'com.github.nwillc:vplugin:2.3.1-SNAPSHOT'
     }
 }
 
@@ -31,7 +31,7 @@ plugins {
     id "com.gradle.plugin-publish" version "0.10.1"
 }
 
-apply plugin: 'com.github.nwillc.vplugin'
+//apply plugin: 'com.github.nwillc.vplugin'
 
 def assertjVersion = '3.12.1'
 def jupiterVersion = '5.4.0'
