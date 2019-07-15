@@ -20,7 +20,7 @@ buildscript {
     }
 
     dependencies {
-        //classpath 'com.github.nwillc:vplugin:2.3.1-SNAPSHOT'
+        classpath 'com.github.nwillc:vplugin:2.3.1-SNAPSHOT'
     }
 }
 
@@ -31,10 +31,10 @@ plugins {
     id "com.gradle.plugin-publish" version "0.10.1"
 }
 
-//apply plugin: 'com.github.nwillc.vplugin'
+apply plugin: 'com.github.nwillc.vplugin'
 
-def assertjVersion = '3.12.1'
-def jupiterVersion = '5.4.0'
+def assertjVersion = '3.12.2'
+def jupiterVersion = '5.5.0'
 
 repositories {
     jcenter()
@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.apache.maven:maven-artifact:3.6.0"
+    implementation "org.apache.maven:maven-artifact:3.6.1"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiterVersion",
             "org.assertj:assertj-core:$assertjVersion"
