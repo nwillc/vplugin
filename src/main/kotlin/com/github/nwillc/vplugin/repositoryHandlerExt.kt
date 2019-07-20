@@ -15,12 +15,18 @@
  *
  */
 
-//pluginManagement {
-//    repositories {
-//        maven {
-//            url 'http://localhost:8081/repository/gradle-plugins/'
-//        }
-//    }
-//}
+package com.github.nwillc.vplugin
 
-rootProject.name = 'vplugin'
+import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+
+fun RepositoryHandler.urls() : Set<String> {
+    val urls = mutableSetOf<String>()
+    this.forEach { repo ->
+        if (repo is MavenArtifactRepository &&
+            repo.url.toString().startsWith("http")) {
+            urls.add(repo.url.toString())
+        }
+    }
+    return urls
+}

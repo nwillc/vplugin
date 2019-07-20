@@ -15,12 +15,16 @@
  *
  */
 
-//pluginManagement {
-//    repositories {
-//        maven {
-//            url 'http://localhost:8081/repository/gradle-plugins/'
-//        }
-//    }
-//}
+package com.github.nwillc.vplugin
 
-rootProject.name = 'vplugin'
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+class LatestTest {
+    @Test
+    fun `should find latest`() {
+        val latest = latest("https://jcenter.bintray.com", "com.github.nwillc", "ksvg")
+        assertThat(latest).isNotNull()
+        println(latest)
+    }
+}

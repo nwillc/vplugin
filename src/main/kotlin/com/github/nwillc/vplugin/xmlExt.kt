@@ -12,12 +12,30 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
 package com.github.nwillc.vplugin
 
-class VersionInfo {
-    String artifact
-    String version
-    String available
-}
+import org.w3c.dom.Document
+import org.w3c.dom.NodeList
+import org.xml.sax.InputSource
+import java.io.StringReader
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
+
+private val dbFactory = DocumentBuilderFactory.newInstance()
+private val docBuilder = dbFactory.newDocumentBuilder()
+private val xpFactory = XPathFactory.newInstance()
+private val xPath = xpFactory.newXPath()!!
+
+fun String.toXmlDoc(): Document = docBuilder.parse(InputSource(StringReader(this)))
+
+fun Document.xPathValue(expression: String): String? = xPath.evaluate(expression, this)
+
+fun Document.xPathNodeList(expression: String): NodeList? = xPath.evaluate(
+    expression,
+    this,
+    XPathConstants.NODESET
+) as NodeList

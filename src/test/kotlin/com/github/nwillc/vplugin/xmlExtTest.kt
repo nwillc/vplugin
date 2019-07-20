@@ -15,12 +15,27 @@
  *
  */
 
-//pluginManagement {
-//    repositories {
-//        maven {
-//            url 'http://localhost:8081/repository/gradle-plugins/'
-//        }
-//    }
-//}
+package com.github.nwillc.vplugin
 
-rootProject.name = 'vplugin'
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import java.io.File
+
+class xmlExtTest {
+    @Test
+    fun `should read metadata`() {
+        val xmlFile = File("src/test/resources/maven-metadata.xml")
+        val doc = xmlFile.readText().toXmlDoc()
+        val evaluate = doc.xPathValue("/metadata/versioning/latest")
+        assertThat(evaluate).isNotNull()
+        println(evaluate)
+        val evaluate1 = doc.xPathNodeList("/metadata/versioning/versions/version")
+        assertThat(evaluate1).isNotNull()
+        if (evaluate1 != null) {
+            for (i in 0..evaluate1.length - 1) {
+                val node = evaluate1.item(i)
+                println(node?.textContent)
+            }
+        }
+    }
+}

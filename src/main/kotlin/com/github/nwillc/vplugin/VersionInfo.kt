@@ -15,12 +15,6 @@
  *
  */
 
-//pluginManagement {
-//    repositories {
-//        maven {
-//            url 'http://localhost:8081/repository/gradle-plugins/'
-//        }
-//    }
-//}
+package com.github.nwillc.vplugin
 
-rootProject.name = 'vplugin'
+data class VersionInfo(val artifact: String, val using: String, val update: String)

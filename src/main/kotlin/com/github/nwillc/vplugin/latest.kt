@@ -15,12 +15,28 @@
  *
  */
 
-//pluginManagement {
-//    repositories {
-//        maven {
-//            url 'http://localhost:8081/repository/gradle-plugins/'
-//        }
-//    }
-//}
+package com.github.nwillc.vplugin
 
-rootProject.name = 'vplugin'
+import java.net.URL
+
+fun latest(url: String, group: String, artifact: String): String? {
+    val groupPath = group.replace('.', '/')
+    val properUrl = if (url.endsWith("/")) url else {
+        url + "/"
+    }
+    val metaDataUrl = "$properUrl$groupPath/$artifact/maven-metadata.xml"
+try {
+    val text = URL(metaDataUrl).readText()
+    val xmlDoc = text.toXmlDoc()
+    val latest = xmlDoc.xPathValue("/metadata/versioning/latest")
+    return if (latest != null)
+        latest
+    else {
+        val versions = xmlDoc.xPathNodeList("/metadata/versioning/versions/version")
+        versions?.item(versions.length - 1)?.textContent
+    }
+} catch (e: Exception) {
+    return null
+}
+
+}
