@@ -1,3 +1,8 @@
+[![license](https://img.shields.io/github/license/nwillc/vplugin.svg)](https://tldrlegal.com/license/-isc-license)
+[![Travis](https://img.shields.io/travis/nwillc/vplugin.svg)](https://travis-ci.org/nwillc/vplugin)
+[![Gradle Plugins](https://img.shields.io/badge/Gradle-Plugin-green.svg)](https://plugins.gradle.org/plugin/com.github.nwillc.vplugin)
+------
+
 # vplugin
 
 A Gradle plugin to report newer versions of a builds dependencies. Traverses your plugin,
@@ -49,9 +54,7 @@ org.junit.jupiter:junit-jupiter-api                                             
 org.junit.jupiter:junit-jupiter-engine                                              5.3.1              5.3.2
 ```
 
------
+## Implementation Note
 
-[![license](https://img.shields.io/github/license/nwillc/vplugin.svg)](https://tldrlegal.com/license/-isc-license)
-[![Travis](https://img.shields.io/travis/nwillc/vplugin.svg)](https://travis-ci.org/nwillc/vplugin)
-[![Gradle Plugins](https://img.shields.io/badge/Gradle-Plugin-green.svg)](https://plugins.gradle.org/plugin/com.github.nwillc.vplugin)
+Since 3.0.0+ implemented in Kotlin.
 
