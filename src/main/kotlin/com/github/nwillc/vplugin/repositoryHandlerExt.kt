@@ -20,13 +20,7 @@ package com.github.nwillc.vplugin
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 
-fun RepositoryHandler.urls() : Set<String> {
-    val urls = mutableSetOf<String>()
-    this.forEach { repo ->
-        if (repo is MavenArtifactRepository &&
-            repo.url.toString().startsWith("http")) {
-            urls.add(repo.url.toString())
-        }
-    }
-    return urls
-}
+fun RepositoryHandler.urls() : Set<String> =
+    filter { it is MavenArtifactRepository && it.url.toString().startsWith("http") }
+    .map { (it as MavenArtifactRepository).url.toString() }
+    .toSet()

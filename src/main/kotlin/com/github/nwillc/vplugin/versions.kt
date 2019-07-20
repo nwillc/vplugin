@@ -37,14 +37,12 @@ fun versions(
         .flatten()
         .distinctBy { it.id() }
         .map { dependency ->
-            val maxBy = urls.map {
-                latest(it, dependency.group ?: "", dependency.name)
-            }
-                .filterNotNull()
-                .maxBy { ComparableVersion(it) }
+            val maxBy = urls
+                .mapNotNull { latest(it, dependency.group ?: "", dependency.name) }
+                .maxBy { ComparableVersion(it) } ?: ""
 
             val update = if (maxBy != dependency.version) maxBy else ""
-            VersionInfo(dependency.id(), dependency.version ?: "", update ?: "")
+            VersionInfo(dependency.id(), dependency.version ?: "", update)
         }
         .toSet()
     report(urls, versions)
@@ -67,8 +65,8 @@ internal fun report(urls: Set<String>, versions: Set<VersionInfo>) {
     versions
         .sortedBy { it.artifact }
         .forEach {
-        println(it.artifact.padEnd(pad1) + it.using.padStart(pad2) + it.update.padStart(pad3))
-    }
+            println(it.artifact.padEnd(pad1) + it.using.padStart(pad2) + it.update.padStart(pad3))
+        }
 }
 
 internal fun Dependency.id(): String = this.group + ":" + this.name

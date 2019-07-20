@@ -25,10 +25,8 @@ import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
-private val dbFactory = DocumentBuilderFactory.newInstance()
-private val docBuilder = dbFactory.newDocumentBuilder()
-private val xpFactory = XPathFactory.newInstance()
-private val xPath = xpFactory.newXPath()!!
+private val docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+private val xPath = XPathFactory.newInstance().newXPath()!!
 
 fun String.toXmlDoc(): Document = docBuilder.parse(InputSource(StringReader(this)))
 
