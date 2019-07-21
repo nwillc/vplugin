@@ -42,7 +42,7 @@ plugins {
 apply(plugin = "com.github.nwillc.vplugin")
 
 group = "com.github.nwillc"
-version = "3.0.1-SNAPSHOT"
+version = "3.0.1"
 
 logger.lifecycle("${project.name} $version")
 

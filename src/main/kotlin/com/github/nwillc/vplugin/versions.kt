@@ -29,6 +29,7 @@ fun versions(
 ) {
     val urls = repositoryHandler.urls() + setOf(*defaultRepos)
     val versions = configurationContainer
+        .asSequence()
         .map { configuration ->
             configuration.allDependencies
                 .filter { it.version != null }
