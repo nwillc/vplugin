@@ -27,7 +27,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("com.github.nwillc:vplugin:3.0.1-SNAPSHOT")
+//        classpath("com.github.nwillc:vplugin:3.0.1-SNAPSHOT")
     }
 }
 
@@ -39,7 +39,7 @@ plugins {
     id("org.jetbrains.dokka") version "0.9.18"
 }
 
-apply(plugin = "com.github.nwillc.vplugin")
+//apply(plugin = "com.github.nwillc.vplugin")
 
 group = "com.github.nwillc"
 version = "3.0.1"
