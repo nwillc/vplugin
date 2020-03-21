@@ -18,53 +18,51 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val jvmTargetVersion = JavaVersion.VERSION_1_8.toString()
-val assertjVersion = "3.12.2"
-val jupiterVersion = "5.5.1"
+val assertJVersion = "3.15.0"
+val jupiterVersion = "5.6.0"
+val mavenArtifactVersion = "3.6.3"
 
 buildscript {
     repositories {
         jcenter()
         mavenLocal()
     }
-    dependencies {
-//        classpath("com.github.nwillc:vplugin:3.0.1-SNAPSHOT")
-    }
 }
 
 plugins {
-    kotlin("jvm") version "1.3.41"
+    kotlin("jvm") version "1.3.70"
     `java-gradle-plugin`
-    maven
+    `maven-publish`
     id("com.gradle.plugin-publish") version "0.10.1"
-    id("org.jetbrains.dokka") version "0.9.18"
+    id("org.jetbrains.dokka") version "0.10.1"
+    id("com.github.nwillc.vplugin") version "3.0.1"
 }
 
-//apply(plugin = "com.github.nwillc.vplugin")
-
 group = "com.github.nwillc"
-version = "3.0.1"
+version = "3.0.2"
 
 logger.lifecycle("${project.name} $version")
 
 repositories {
     jcenter()
-    mavenLocal()
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.apache.maven:maven-artifact:3.6.1")
+    implementation("org.apache.maven:maven-artifact:$mavenArtifactVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
-    testImplementation("org.assertj:assertj-core:$assertjVersion")
+    testImplementation("org.assertj:assertj-core:$assertJVersion")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
     classifier = "sources"
     from(sourceSets["main"].allSource)
 }
 
 val javadocJar by tasks.registering(Jar::class) {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
     dependsOn("dokka")
     classifier = "javadoc"
     from("$buildDir/javadoc")
