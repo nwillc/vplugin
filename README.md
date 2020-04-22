@@ -1,5 +1,5 @@
 [![license](https://img.shields.io/github/license/nwillc/vplugin.svg)](https://tldrlegal.com/license/-isc-license)
-[![Travis](https://img.shields.io/travis/nwillc/vplugin.svg)](https://travis-ci.org/nwillc/vplugin)
+[![Build Status](https://github.com/nwillc/vplugin/workflows/CICD/badge.svg)](https://github.com/nwillc/vplugin/actions?query=workflow%3ACICD)
 [![Gradle Plugins](https://img.shields.io/badge/Gradle-Plugin-green.svg)](https://plugins.gradle.org/plugin/com.github.nwillc.vplugin)
 ------
 
