@@ -15,11 +15,12 @@
  *
  */
 
+import com.gradle.publish.PublishTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val jvmTargetVersion = JavaVersion.VERSION_1_8.toString()
 val assertJVersion = "3.15.0"
-val jupiterVersion = "5.6.0"
+val jupiterVersion = "5.6.1"
 val mavenArtifactVersion = "3.6.3"
 
 buildscript {
@@ -30,16 +31,16 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.70"
+    kotlin("jvm") version "1.3.72"
     `java-gradle-plugin`
     `maven-publish`
-    id("com.gradle.plugin-publish") version "0.10.1"
+    id("com.gradle.plugin-publish") version "0.11.0"
     id("org.jetbrains.dokka") version "0.10.1"
-    id("com.github.nwillc.vplugin") version "3.0.1"
+    id("com.github.nwillc.vplugin") version "3.0.3"
 }
 
 group = "com.github.nwillc"
-version = "3.0.2"
+version = "3.0.4-SNAPSHOT"
 
 logger.lifecycle("${project.name} $version")
 
@@ -56,15 +57,14 @@ dependencies {
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
-    duplicatesStrategy = DuplicatesStrategy.FAIL
-    classifier = "sources"
-    from(sourceSets["main"].allSource)
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
 }
 
 val javadocJar by tasks.registering(Jar::class) {
     duplicatesStrategy = DuplicatesStrategy.FAIL
     dependsOn("dokka")
-    classifier = "javadoc"
+    archiveClassifier.set("javadoc")
     from("$buildDir/javadoc")
 }
 
@@ -94,8 +94,22 @@ tasks {
         kotlinOptions.jvmTarget = jvmTargetVersion
     }
     withType<Test> {
-        useJUnitPlatform {
-            includeEngines = setOf("junit-jupiter")
+        useJUnitPlatform()
+        testLogging {
+            showStandardStreams = true
+            events("passed", "failed", "skipped")
         }
     }
+    withType<PublishTask> {
+        val key = System.getenv("GRADLE_PUBLISH_KEY")
+          val secret = System.getenv("GRADLE_PUBLISH_SECRET")
+           onlyIf {
+               if (project.version.toString().contains('-')) {
+                   logger.lifecycle("Version ${project.version} is not a release version - skipping upload.")
+                   false
+               } else {
+                   true
+               }
+           }
+       }
 }
