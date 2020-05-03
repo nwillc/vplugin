@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, nwillc@gmail.com
+ * Copyright (c) 2020, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,7 +12,6 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
  */
 
 package com.github.nwillc.vplugin
@@ -22,11 +21,16 @@ import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 
+private const val COLUMN1_WIDTH = 80
+private const val COLUMN1_PAD = 2
+private const val COLUMN_DEFAULT_PAD = 15
+
 fun versions(
     configurationContainer: ConfigurationContainer,
     repositoryHandler: RepositoryHandler,
     vararg defaultRepos: String
 ) {
+    @SuppressWarnings("SpreadOperator")
     val urls = repositoryHandler.urls() + setOf(*defaultRepos)
     val versions = configurationContainer
         .asSequence()
@@ -57,9 +61,9 @@ internal fun report(urls: Set<String>, versions: Set<VersionInfo>) {
     }
     println()
 
-    val pad1 = (versions.map { it.artifact.length }.max() ?: 80) + 2
-    val pad2 = (versions.map { it.using.length }.max() ?: 0) + 15
-    val pad3 = (versions.map { it.update.length }.max() ?: 0) + 15
+    val pad1 = (versions.map { it.artifact.length }.max() ?: COLUMN1_WIDTH) + COLUMN1_PAD
+    val pad2 = (versions.map { it.using.length }.max() ?: 0) + COLUMN_DEFAULT_PAD
+    val pad3 = (versions.map { it.update.length }.max() ?: 0) + COLUMN_DEFAULT_PAD
 
     println("Artifact".padEnd(pad1) + "Using".padStart(pad2) + "Update".padStart(pad3))
     println("--------".padEnd(pad1) + "-----".padStart(pad2) + "------".padStart(pad3))

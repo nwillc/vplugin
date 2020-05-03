@@ -12,18 +12,13 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
  */
 
-package com.github.nwillc.vplugin
+plugins {
+    `kotlin-dsl`
+}
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-
-class LatestTest {
-    @Test
-    fun `should find latest`() {
-        val latest = latest("https://jcenter.bintray.com", "com.github.nwillc", "ksvg")
-        assertThat(latest).isNotNull()
-        println(latest)
-    }
+repositories {
+    jcenter()
 }

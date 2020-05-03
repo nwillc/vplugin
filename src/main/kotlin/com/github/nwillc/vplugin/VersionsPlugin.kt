@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, nwillc@gmail.com
+ * Copyright (c) 2020, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,7 +12,6 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
  */
 
 package com.github.nwillc.vplugin
@@ -21,23 +20,31 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class VersionsPlugin : Plugin<Project> {
+    @SuppressWarnings("TooGenericExceptionCaught")
     override fun apply(project: Project) {
-        project.task("versions").doLast {
-            try {
-                println("\nPlugins")
-                println("=======")
-                versions(
-                    project.buildscript.configurations,
-                    project.buildscript.repositories,
-                    "https://plugins.gradle.org/m2/"
-                )
-                println("\nDependencies")
-                println("============")
-                versions(project.configurations, project.repositories)
-                print("\n")
-            } catch (e: Exception) {
-                project.logger.error("Versions encountered $e")
+        project.tasks.create(TASK_NAME) { task ->
+            task.group = "help"
+            task.doLast {
+                try {
+                    println("\nPlugins")
+                    println("=======")
+                    versions(
+                        project.buildscript.configurations,
+                        project.buildscript.repositories,
+                        "https://plugins.gradle.org/m2/"
+                    )
+                    println("\nDependencies")
+                    println("============")
+                    versions(project.configurations, project.repositories)
+                    print("\n")
+                } catch (e: Exception) {
+                    project.logger.error("$TASK_NAME encountered $e")
+                }
             }
         }
+    }
+
+    companion object {
+        const val TASK_NAME = "versions"
     }
 }

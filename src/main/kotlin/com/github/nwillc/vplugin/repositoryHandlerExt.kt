@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, nwillc@gmail.com
+ * Copyright (c) 2020, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,7 +12,6 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
  */
 
 package com.github.nwillc.vplugin
@@ -20,7 +19,7 @@ package com.github.nwillc.vplugin
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 
-fun RepositoryHandler.urls() : Set<String> =
+fun RepositoryHandler.urls(): Set<String> =
     filter { it is MavenArtifactRepository && it.url.toString().startsWith("http") }
     .map { (it as MavenArtifactRepository).url.toString() }
     .toSet()

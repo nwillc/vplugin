@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, nwillc@gmail.com
+ * Copyright (c) 2020, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,7 +12,6 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
  */
 
 package com.github.nwillc.vplugin
@@ -21,7 +20,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.io.File
 
-class xmlExtTest {
+class XmlExtKTTest {
     @Test
     fun `should read metadata`() {
         val xmlFile = File("src/test/resources/maven-metadata.xml")
@@ -32,7 +31,7 @@ class xmlExtTest {
         val evaluate1 = doc.xPathNodeList("/metadata/versioning/versions/version")
         assertThat(evaluate1).isNotNull()
         if (evaluate1 != null) {
-            for (i in 0..evaluate1.length - 1) {
+            for (i in 0 until evaluate1.length) {
                 val node = evaluate1.item(i)
                 println(node?.textContent)
             }

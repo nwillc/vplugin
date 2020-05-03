@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, nwillc@gmail.com
+ * Copyright (c) 2020, nwillc@gmail.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -12,16 +12,10 @@
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *
  */
 
 import com.gradle.publish.PublishTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-val jvmTargetVersion = JavaVersion.VERSION_1_8.toString()
-val assertJVersion = "3.15.0"
-val jupiterVersion = "5.6.1"
-val mavenArtifactVersion = "3.6.3"
 
 buildscript {
     repositories {
@@ -31,16 +25,13 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.3.72"
     `java-gradle-plugin`
     `maven-publish`
-    id("com.gradle.plugin-publish") version "0.11.0"
-    id("org.jetbrains.dokka") version "0.10.1"
-    id("com.github.nwillc.vplugin") version "3.0.3"
+    Dependencies.plugins.forEach { (n, v) -> id(n) version v }
 }
 
-group = "com.github.nwillc"
-version = "3.0.5-SNAPSHOT"
+group = Constants.group
+version = Constants.version
 
 logger.lifecycle("${project.name} $version")
 
@@ -49,11 +40,15 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("org.apache.maven:maven-artifact:$mavenArtifactVersion")
+    Dependencies.artifacts(
+        "org.apache.maven:maven-artifact",
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    ) { implementation(it) }
 
-    testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
-    testImplementation("org.assertj:assertj-core:$assertJVersion")
+    Dependencies.artifacts(
+        "org.assertj:assertj-core",
+        "org.junit.jupiter:junit-jupiter"
+    ) { testImplementation(it) }
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
@@ -77,7 +72,7 @@ pluginBundle {
 gradlePlugin {
     plugins {
         create("versionsPlugin") {
-            id = "${group}.${project.name}"
+            id = "$group.${project.name}"
             displayName = "Gradle versions plugin"
             description = """Gradle plugin to report newer versions of dependencies. Traverses your buildscript,
 compile and runtime dependencies. For each dependency, all of your declared repositories are
@@ -91,7 +86,7 @@ their current version, and higher ones if available.
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = jvmTargetVersion
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
     withType<Test> {
         useJUnitPlatform()
@@ -102,14 +97,19 @@ tasks {
     }
     withType<PublishTask> {
         val key = System.getenv("GRADLE_PUBLISH_KEY")
-          val secret = System.getenv("GRADLE_PUBLISH_SECRET")
-           onlyIf {
-               if (project.version.toString().contains('-')) {
-                   logger.lifecycle("Version ${project.version} is not a release version - skipping upload.")
-                   false
-               } else {
-                   true
-               }
-           }
-       }
+        val secret = System.getenv("GRADLE_PUBLISH_SECRET")
+        onlyIf {
+            if (project.version.toString().contains('-')) {
+                logger.lifecycle("Version ${project.version} is not a release version - skipping upload.")
+                false
+            } else {
+                true
+            }
+        }
+    }
+}
+
+ktlint {
+    version.set(ToolVersions.ktlint)
+    disabledRules.set(setOf("import-ordering"))
 }
