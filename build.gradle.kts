@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     repositories {
         jcenter()
-        mavenLocal()
     }
 }
 
@@ -37,6 +36,7 @@ logger.lifecycle("${project.name} $version")
 
 repositories {
     jcenter()
+    mavenLocal()
 }
 
 dependencies {

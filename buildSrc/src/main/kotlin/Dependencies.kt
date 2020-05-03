@@ -27,11 +27,10 @@ object PluginVersions {
     const val kotlin = "1.3.72"
     const val ktlint = "9.2.1"
     const val pluginPublish = "0.11.0"
-    const val vplugin = "3.0.3"
+    const val vplugin = "3.0.4"
 }
 
 object ToolVersions {
-    const val jacoco = "0.8.3"
     const val ktlint = "0.36.0"
 }
 
