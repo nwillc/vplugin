@@ -18,7 +18,7 @@
 
 object Constants {
     const val group = "com.github.nwillc"
-    const val version = "3.0.5-SNAPSHOT"
+    const val version = "3.0.5"
 }
 
 object PluginVersions {
