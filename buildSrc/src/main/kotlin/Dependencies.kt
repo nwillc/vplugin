@@ -18,16 +18,16 @@
 
 object Constants {
     const val group = "com.github.nwillc"
-    const val version = "3.0.5"
+    const val version = "3.0.6-SNAPSOT"
 }
 
 object PluginVersions {
-    const val detekt = "1.8.0"
+    const val detekt = "1.9.1"
     const val dokka = "0.10.1"
     const val kotlin = "1.3.72"
     const val ktlint = "9.2.1"
     const val pluginPublish = "0.11.0"
-    const val vplugin = "3.0.4"
+    const val vplugin = "3.0.5"
 }
 
 object ToolVersions {
@@ -35,8 +35,8 @@ object ToolVersions {
 }
 
 object Versions {
-    const val assertJ = "3.15.0"
-    const val jupiter = "5.6.1"
+    const val assertJ = "3.16.1"
+    const val jupiter = "5.7.0-M1"
     const val mavenArtifact = "3.6.3"
 }
 

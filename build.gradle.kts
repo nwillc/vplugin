@@ -74,11 +74,12 @@ gradlePlugin {
         create("versionsPlugin") {
             id = "$group.${project.name}"
             displayName = "Gradle versions plugin"
-            description = """Gradle plugin to report newer versions of dependencies. Traverses your buildscript,
-compile and runtime dependencies. For each dependency, all of your declared repositories are
-checked, and the highest version is found. A text report is generated showing the dependencies,
-their current version, and higher ones if available.
-"""
+            description = """
+                          Gradle plugin to report newer versions of dependencies. Traverses your buildscript,
+                          compile and runtime dependencies. For each dependency, all of your declared repositories are
+                          checked, and the highest version is found. A text report is generated showing the dependencies,
+                          their current version, and higher ones if available.
+                          """.trimIndent()
             implementationClass = "com.github.nwillc.vplugin.VersionsPlugin"
         }
     }
